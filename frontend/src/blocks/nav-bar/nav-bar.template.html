@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="blocks/nav-bar/nav-bar.css" />
+
+<div class="navbar">
+  <div class="navbar__menu-toggle" data-toggle>
+    <div class="navbar__menu-toggle-line"></div>
+    <div class="navbar__menu-toggle-line"></div>
+    <div class="navbar__menu-toggle-line"></div>
+  </div>
+
+  <div class="navbar__logo">
+    <a href="#/" data-link><img alt="logo" src="assets/images/logo.jpg" class="navbar__logo-icon" /></a>
+  </div>
+
+  <div class="navbar__menu">
+    <a class="navbar__menu-item navbar__menu-item--button" href="#/menu" data-link>MENU</a>
+    <a class="navbar__menu-item navbar__menu-item--button" href="#/about" data-link>ABOUT</a>
+    <a class="navbar__menu-item navbar__menu-item--button" href="#/reservation" data-link>BOOK A TABLE</a>
+  </div>
+</div>
+
+<div class="layout-page__account">
+  <div class="layout-page__account-icon profile-icon">
+    <a href="#/profile" data-link>
+      <img src="assets/icon/perfil.png" alt="Perfil" class="layout-page__icon-person" />
+    </a>
+  </div>
+  <div class="layout-page__account-icon cart-icon">
+    <a href="#/cart" data-link>
+      <img src="assets/icon/carrito.png" alt="Carrito" class="layout-page__icon-cart" />
+      <span class="navbar__cart-badge"></span>
+    </a>
+  </div>
+  <div class="layout-page__account-icon logout-button">
+    <img src="assets/icon/logout.png" alt="Logout" class="layout-page__icon-logout" />
+  </div>
+</div>
+
+<modal-menu class="navbar__modal-menu navbar__modal-menu--hide"></modal-menu>

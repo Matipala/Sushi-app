@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="blocks/login/login.css" />
+
+<div class="log">
+    <div class="log__main">
+        <div class="log__title">
+            <h1 class="log__title-line">LOGIN</h1>
+        </div>
+    </div>
+
+    <div class="log__aside">
+        <div class="login">
+            <h2 class="login__heading">Login</h2>
+            <form class="login__form">
+                <div class="login__error" aria-live="polite"></div>
+
+                <div class="login__field">
+                    <input type="email" name="email" class="login__input" placeholder="Email" required />
+                </div>
+                <div class="login__field">
+                    <input type="password" name="password" class="login__input" placeholder="Password" required />
+                </div>
+                <button type="submit" class="login__button">Login</button>
+            </form>
+            <a href="#/registration" class="login__switch">
+                Go to registration instead
+            </a>
+        </div>
+        <footer-component></footer-component>
+    </div>
+</div>

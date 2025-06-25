@@ -1,0 +1,219 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.registration {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.registration__main {
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: url('../../assets/images/login-register.jpg') center/cover no-repeat;
+}
+
+.registration__aside {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.registration__item {
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.registration__item--menu {
+    background-image: url('../../assets/images/menu.jpg');
+}
+
+.registration__item--reservation {
+    background-image: url('../../assets/images/reservation.jpg');
+}
+
+.registration__item--restaurant {
+    background-image: url('../../assets/images/our-restaurant.jpg');
+}
+
+.registration__link {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #0a0b0a;
+    border-top-left-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #efe7d2;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.registration__link-text {
+    padding-left: 20px;
+}
+
+.registration__link-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.registration__title {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    z-index: 10;
+    color: #f0ead6;
+}
+
+.registration__title-line {
+    margin: 0;
+    user-select: none;
+    font-size: 90px;
+    line-height: 1;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+    .registration {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .registration__main {
+        height: 300px;
+    }
+
+    .registration__aside {
+        grid-template-rows: repeat(3, 200px);
+    }
+
+    .registration__link {
+        width: 180px;
+        height: 70px;
+        border-top-left-radius: 35px;
+    }
+
+    .registration__title {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .registration__title-line {
+        font-size: 15vw;
+    }
+}
+
+@media (max-width: 767px) {
+    .registration {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        height: auto;
+    }
+
+    .registration__side {
+        grid-template-rows: auto auto auto;
+    }
+}
+
+
+.register {
+    border-radius: 25px;
+    padding: 90px;
+    color: #f0ead6;
+    border: 1px solid rgba(240, 234, 214, 0.2);
+    height: 100%;
+}
+
+.register__title {
+    text-align: center;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.register__title::before,
+.register__title::after {
+    content: '◇';
+    color: rgba(240, 234, 214, 0.6);
+    font-size: 1rem;
+    margin: 0 0.5rem;
+}
+
+.register__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 1rem;
+}
+
+.register__input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(240, 234, 214, 0.2);
+    border-radius: 15px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    color: #f0ead6;
+}
+
+.register__input::placeholder {
+    color: rgba(240, 234, 214, 0.5);
+}
+
+.register__input:focus {
+    border-color: #f5e8c7;
+}
+
+.register__submit {
+    width: 100%;
+    background: #efe7d2;
+    color: #0a0b0a;
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.register__submit:hover {
+    background: #e1d4b0;
+}
+
+.register__link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.register__link:hover {
+    color: #f5e8c7;
+}

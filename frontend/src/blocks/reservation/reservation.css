@@ -1,0 +1,175 @@
+.reservatio {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #121212;
+}
+
+.reservatio__main {
+    position: relative;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: url('../../assets/images/login-register.jpg') center/cover no-repeat;
+}
+
+.reservatio__aside {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.reservatio__title {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    z-index: 10;
+    color: #f0ead6;
+}
+
+.reservatio__title-line {
+    margin: 0;
+    user-select: none;
+    font-size: 80px;
+    line-height: 1;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+    .reservatio {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .reservatio__main {
+        height: 300px;
+    }
+
+    .reservatio__aside {
+        grid-template-rows: repeat(3, 200px);
+    }
+
+    .reservatio__title {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .reservatio__title-line {
+        font-size: 15vw;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .reservatio {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        height: auto;
+    }
+
+    .reservatio__side {
+        grid-template-rows: auto auto auto;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.reservation {
+    color: #f0ead6;
+    padding: 20px;
+    border-radius: 25px;
+    padding: 90px;
+    color: #f0ead6;
+    border: 1px solid rgba(240, 234, 214, 0.2);
+    height: 100%;
+}
+
+.reservation__heading {
+    text-align: center;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.reservation__heading::before,
+.reservation__heading::after {
+    content: '◇';
+    color: rgba(240, 234, 214, 0.6);
+    font-size: 1rem;
+    margin: 0 0.5rem;
+}
+
+.reservation__text {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.reservation__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.reservation__field {
+    width: 100%;
+}
+
+
+.reservation__input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(240, 234, 214, 0.2);
+    border-radius: 15px;
+    padding: 15px 20px;
+    font-size: 1rem;
+    color: #f0ead6;
+}
+
+.reservation__input::placeholder {
+    color: rgba(240, 234, 214, 0.5);
+}
+
+
+.reservation__row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.reservation__button {
+    margin-top: 1rem;
+    background: #efe7d2;
+    color: #0a0b0a;
+    border: none;
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.reservation__button:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 767px) {
+    .reservation__row {
+        grid-template-columns: 1fr;
+    }
+}
