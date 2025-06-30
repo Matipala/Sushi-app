@@ -10,6 +10,8 @@ const blogRoutes = require('./routes/blog.routes');
 const reservationRoutes = require('./routes/reservation.routes');
 const cartRoutes = require('./routes/cart.routes');
 const orderRoutes = require('./routes/order.routes');
+const favoriteRoutes = require('./routes/favoriteBlog.routes');
+
 
 
 const app = express();
@@ -24,6 +26,8 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/favorites', favoriteRoutes);
+
 
 
 app.use((err, req, res, next) => {
