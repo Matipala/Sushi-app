@@ -1,6 +1,6 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
 import router from '../../services/router.js';
-import { register, login } from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 
 class Registration extends BaseHTMLElement {
     constructor() {
@@ -15,14 +15,10 @@ class Registration extends BaseHTMLElement {
 
     setupEventListeners() {
         const registerButton = this.shadowRoot.querySelector('.register__submit');
-        if (registerButton) {
-            registerButton.addEventListener('click', (event) => this.handleRegister(event));
-        }
+        registerButton?.addEventListener('click', e => this.handleRegister(e));
 
         const registerLink = this.shadowRoot.querySelector('.register a');
-        if (registerLink) {
-            registerLink.addEventListener('click', (event) => this.handleNavigation(event));
-        }
+        registerLink?.addEventListener('click', e => this.handleNavigation(e));
     }
 
     async handleRegister(event) {
@@ -30,17 +26,13 @@ class Registration extends BaseHTMLElement {
         const errorEl = this.shadowRoot.querySelector('.register__error');
         if (errorEl) errorEl.textContent = '';
 
-        const nameInput = this.shadowRoot.querySelector('input[name="name"]');
-        const emailInput = this.shadowRoot.querySelector('input[name="email"]');
-        const passInput = this.shadowRoot.querySelector('input[name="password"]');
-        const name = nameInput ? nameInput.value.trim() : '';
-        const email = emailInput ? emailInput.value.trim() : '';
-        const password = passInput ? passInput.value : '';
+        const name = this.shadowRoot.querySelector('input[name="name"]')?.value.trim() || '';
+        const email = this.shadowRoot.querySelector('input[name="email"]')?.value.trim() || '';
+        const password = this.shadowRoot.querySelector('input[name="password"]')?.value || '';
 
         try {
-            await register({ name, email, password });
-
-            const { token, user } = await login({ email, password });
+            await ApiService.register({ name, email, password });
+            const { token, user } = await ApiService.login({ email, password });
 
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
@@ -64,19 +56,13 @@ class Registration extends BaseHTMLElement {
         const popup = document.createElement('div');
         popup.textContent = message;
         Object.assign(popup.style, {
-            position: 'fixed',
-            top: '20px',
-            left: '50%',
+            position: 'fixed', top: '20px', left: '50%',
             transform: 'translateX(-50%)',
             background: success ? '#4BB543' : '#FF6B6B',
-            color: '#FFF',
-            padding: '10px 20px',
-            borderRadius: '5px',
-            zIndex: '9999',
-            fontFamily: 'sans-serif',
-            fontSize: '14px',
-            opacity: '0',
-            transition: 'opacity 0.3s'
+            color: '#FFF', padding: '10px 20px',
+            borderRadius: '5px', zIndex: '9999',
+            fontFamily: 'sans-serif', fontSize: '14px',
+            opacity: '0', transition: 'opacity 0.3s'
         });
         this.shadowRoot.appendChild(popup);
         requestAnimationFrame(() => popup.style.opacity = '1');

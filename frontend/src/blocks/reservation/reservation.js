@@ -1,5 +1,5 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
-import { createReservation } from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 
 class ReservationComponent extends BaseHTMLElement {
     constructor() {
@@ -41,7 +41,7 @@ class ReservationComponent extends BaseHTMLElement {
         }
 
         try {
-            await createReservation(payload);
+            await ApiService.createReservation(payload);
             this.showPopup('Reserva creada con éxito', true);
             this.$form.reset();
         } catch (err) {

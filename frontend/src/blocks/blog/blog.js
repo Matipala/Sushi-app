@@ -1,11 +1,5 @@
-// blocks/blog/blog.js
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
-import {
-    getBlogPosts,
-    getFavorites,
-    addFavorite,
-    removeFavorite
-} from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 
 export default class BlogComponent extends BaseHTMLElement {
     constructor() {
@@ -16,7 +10,6 @@ export default class BlogComponent extends BaseHTMLElement {
     async connectedCallback() {
         await this.loadHTML('blocks/blog/blog.template.html');
 
-        // referencias
         this.$filters = this.shadowRoot.querySelector('.blog__filters');
         this.$items = this.shadowRoot.querySelector('.blog__items');
         this.$tpl = this.shadowRoot.getElementById('post-template');
@@ -29,14 +22,13 @@ export default class BlogComponent extends BaseHTMLElement {
         this.token = localStorage.getItem('token');
         this.user = JSON.parse(localStorage.getItem('user') || 'null');
 
-        // si hay sesión, carga favoritos y renderiza filtros
         if (this.token) {
-            this.favs = await getFavorites(this.token); // array de postId strings
+            this.favs = await ApiService.getFavorites(this.token);
             this.$filters.innerHTML = `
-        <button data-filter="all"  class="blog__filter-button blog__filter-button--active">All News</button>
-        <button data-filter="fav"  class="blog__filter-button">Favorites</button>
-        <button data-filter="mine" class="blog__filter-button">My Articles</button>
-      `;
+                <button data-filter="all" class="blog__filter-button blog__filter-button--active">All News</button>
+                <button data-filter="fav" class="blog__filter-button">Favorites</button>
+                <button data-filter="mine" class="blog__filter-button">My Articles</button>
+            `;
             this.$filters.addEventListener('click', e => {
                 const btn = e.target.closest('.blog__filter-button');
                 if (!btn) return;
@@ -47,51 +39,41 @@ export default class BlogComponent extends BaseHTMLElement {
                 this._applyFilter(btn.dataset.filter);
             });
         } else {
-            // oculta zona de filtros si no hay sesión
             this.$filters.style.display = 'none';
         }
 
-        // carga y renderiza
-        const posts = await getBlogPosts();
+        const posts = await ApiService.getBlogPosts();
         this._renderPosts(posts);
     }
 
     _renderPosts(posts) {
         this.$items.innerHTML = '';
         posts.forEach(p => {
-            // crea enlace contenedor
             const link = document.createElement('a');
             link.href = `#/blog/${p.id}`;
             link.setAttribute('data-link', '');
-            // clona plantilla
             const clone = this.$tpl.content.cloneNode(true);
             const root = clone.querySelector('.blog__item');
 
-            // datos en el root para filtrado
             root.dataset.id = p.id;
             root.dataset.authorId = p.author_id;
 
-            // imagen
             const img = clone.querySelector('.blog__item-image');
             img.src = p.image_url || 'assets/images/default_blog.jpg';
             img.alt = p.title;
 
-            // fecha
             const date = new Date(p.created_at);
             clone.querySelector('.blog__item-date').textContent =
                 date.toLocaleDateString(undefined, {
                     year: 'numeric', month: 'short', day: 'numeric'
                 });
 
-            // título y descripción
             clone.querySelector('.blog__item-title').textContent = p.title;
             clone.querySelector('.blog__item-desc').textContent = p.description;
 
-            // autor
             clone.querySelector('.blog__item-author').textContent =
                 p.author?.name || 'Unknown author';
 
-            // favorito
             const favBtn = clone.querySelector('.blog__item-fav');
             if (!this.token) {
                 favBtn.style.display = 'none';
@@ -102,21 +84,19 @@ export default class BlogComponent extends BaseHTMLElement {
                 favBtn.addEventListener('click', async e => {
                     e.preventDefault();
                     if (this.favs.includes(p.id)) {
-                        await removeFavorite(p.id, this.token);
+                        await ApiService.removeFavorite(p.id, this.token);
                         this.favs = this.favs.filter(x => x !== p.id);
                         favBtn.classList.remove('blog__item-fav--active');
                     } else {
-                        await addFavorite(p.id, this.token);
+                        await ApiService.addFavorite(p.id, this.token);
                         this.favs.push(p.id);
                         favBtn.classList.add('blog__item-fav--active');
                     }
-                    // reaplica filtro activo
                     const active = this.$filters.querySelector('.blog__filter-button--active')?.dataset.filter || 'all';
                     this._applyFilter(active);
                 });
             }
 
-            // inserta clone dentro del enlace y en el contenedor
             link.appendChild(clone);
             this.$items.appendChild(link);
         });

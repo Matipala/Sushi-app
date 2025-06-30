@@ -1,5 +1,5 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
-import { getCategories, getMenuItems, addCartItem } from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 import router from '../../services/router.js';
 
 export default class MenuComponent extends BaseHTMLElement {
@@ -23,7 +23,6 @@ export default class MenuComponent extends BaseHTMLElement {
         this.$title.classList.add('menu__overlay-title');
         this.$price.classList.add('menu__overlay-price');
         this.$btn.classList.add('menu__overlay-btn');
-
         this.$btn.textContent = '+';
 
         this.token = localStorage.getItem('token');
@@ -34,25 +33,26 @@ export default class MenuComponent extends BaseHTMLElement {
     }
 
     async _loadData() {
-        this.categories = await getCategories();
-        this.items = await getMenuItems();
+        this.categories = await ApiService.getCategories();
+        this.items = await ApiService.getMenuItems();
         this._renderFilters();
     }
 
     _renderFilters() {
         this.$filters.innerHTML = `
-      <button data-category="all" class="filter-button filter-button--active">All</button>
-      ${this.categories.map(c =>
+            <button data-category="all" class="filter-button filter-button--active">All</button>
+            ${this.categories.map(c =>
             `<button data-category="${c.id}" class="filter-button">${c.name}</button>`
         ).join('')}
-    `;
+        `;
     }
 
     _bindFilterButtons() {
         this.$filters.addEventListener('click', e => {
             const btn = e.target.closest('.filter-button');
             if (!btn) return;
-            this.$filters.querySelector('.filter-button--active')
+            this.$filters
+                .querySelector('.filter-button--active')
                 .classList.remove('filter-button--active');
             btn.classList.add('filter-button--active');
             this.currentCategory = btn.dataset.category;
@@ -69,15 +69,15 @@ export default class MenuComponent extends BaseHTMLElement {
                 const el = document.createElement('div');
                 el.className = 'menu-item';
                 el.innerHTML = `
-          <div class="menu-item__img-wrapper">
-            <img src="${item.image_url}" alt="${item.name}" class="menu-item__img"/>
-          </div>
-          <div class="menu-item__info">
-            <h2 class="menu-item__name">${item.name}</h2>
-            <p class="menu-item__desc">${item.description}</p>
-          </div>
-          <div class="menu-item__price">${item.price}</div>
-        `;
+                    <div class="menu-item__img-wrapper">
+                        <img src="${item.image_url}" alt="${item.name}" class="menu-item__img"/>
+                    </div>
+                    <div class="menu-item__info">
+                        <h2 class="menu-item__name">${item.name}</h2>
+                        <p class="menu-item__desc">${item.description}</p>
+                    </div>
+                    <div class="menu-item__price">${item.price}</div>
+                `;
                 el.addEventListener('click', () => this._selectItem(item));
                 this.$list.appendChild(el);
             });
@@ -93,8 +93,9 @@ export default class MenuComponent extends BaseHTMLElement {
     _selectItem(item) {
         this.$main.style.backgroundImage = `url('${item.image_url}')`;
         this.$title.textContent = item.name;
+        this.$price.textContent = `$${item.price}`;
         this.$btn.onclick = async () => {
-            await addCartItem(item.id, 1, this.token);
+            await ApiService.addCartItem(item.id, 1, this.token);
             window.dispatchEvent(new CustomEvent('cart-updated'));
         };
 

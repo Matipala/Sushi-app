@@ -1,5 +1,5 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
-import { getCartItems, removeCartItem, updateCartItem } from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 
 export default class CartComponent extends BaseHTMLElement {
     constructor() {
@@ -24,8 +24,7 @@ export default class CartComponent extends BaseHTMLElement {
         if (!this.token) {
             return;
         }
-
-        this.cartItems = await getCartItems(this.token);
+        this.cartItems = await ApiService.getCartItems(this.token);
 
         this.$list.innerHTML = '';
         let sum = 0;
@@ -33,34 +32,34 @@ export default class CartComponent extends BaseHTMLElement {
             const wrapper = document.createElement('div');
             wrapper.className = 'cart__item';
             wrapper.innerHTML = `
-        <img class="cart__item-img" src="${item.image_url}" alt="${item.name}" />
-        <div class="cart__item-info">
-          <div class="cart__item-name">${item.name}</div>
-          <div class="cart__item-desc">${item.description}</div>
-          <div class="cart__qty-controls">
-            <button class="qty-decr">–</button>
-            <span class="qty">${item.quantity}</span>
-            <button class="qty-incr">+</button>
-          </div>
-        </div>
-        <div class="cart__item-pricing">$${item.price * item.quantity}</div>
-        <button class="remove">×</button>
-      `;
+                <img class="cart__item-img" src="${item.image_url}" alt="${item.name}" />
+                <div class="cart__item-info">
+                  <div class="cart__item-name">${item.name}</div>
+                  <div class="cart__item-desc">${item.description}</div>
+                  <div class="cart__qty-controls">
+                    <button class="qty-decr">–</button>
+                    <span class="qty">${item.quantity}</span>
+                    <button class="qty-incr">+</button>
+                  </div>
+                </div>
+                <div class="cart__item-pricing">$${item.price * item.quantity}</div>
+                <button class="remove">×</button>
+            `;
 
             wrapper.querySelector('.qty-incr').addEventListener('click', async () => {
-                await updateCartItem(item.id, item.quantity + 1, this.token);
+                await ApiService.updateCartItem(item.id, item.quantity + 1, this.token);
                 window.dispatchEvent(new CustomEvent('cart-updated'));
             });
             wrapper.querySelector('.qty-decr').addEventListener('click', async () => {
                 if (item.quantity > 1) {
-                    await updateCartItem(item.id, item.quantity - 1, this.token);
+                    await ApiService.updateCartItem(item.id, item.quantity - 1, this.token);
                 } else {
-                    await removeCartItem(item.id, this.token);
+                    await ApiService.removeCartItem(item.id, this.token);
                 }
                 window.dispatchEvent(new CustomEvent('cart-updated'));
             });
             wrapper.querySelector('.remove').addEventListener('click', async () => {
-                await removeCartItem(item.id, this.token);
+                await ApiService.removeCartItem(item.id, this.token);
                 window.dispatchEvent(new CustomEvent('cart-updated'));
             });
 
@@ -78,21 +77,10 @@ export default class CartComponent extends BaseHTMLElement {
         }
 
         try {
-            await fetch('http://localhost:3000/api/orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${this.token}`
-                },
-                body: JSON.stringify({
-                    items: this.cartItems.map(i => ({
-                        menu_item_id: i.menu_item_id || i.id,
-                        quantity: i.quantity
-                    }))
-                })
-            }).then(r => {
-                if (!r.ok) throw new Error('Error al generar la orden');
-            });
+            await ApiService.createOrder(
+                this.cartItems.map(i => ({ menu_item_id: i.menu_item_id || i.id, quantity: i.quantity })),
+                this.token
+            );
 
             this.showPopup('Orden realizada con éxito');
             window.dispatchEvent(new CustomEvent('cart-cleared'));

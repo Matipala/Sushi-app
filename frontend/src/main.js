@@ -1,4 +1,4 @@
-import './api.js';
+import './services/ApiService.js';
 import Router from './services/router.js';
 
 import './blocks/base/BaseHTMLElement.js';

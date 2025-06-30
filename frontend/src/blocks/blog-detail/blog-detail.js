@@ -1,5 +1,5 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
-import { getBlogPostById, updateBlogPost } from '../../api.js';
+import ApiService from '../../services/ApiService.js';
 import router from '../../services/router.js';
 
 export default class BlogDetailComponent extends BaseHTMLElement {
@@ -36,7 +36,7 @@ export default class BlogDetailComponent extends BaseHTMLElement {
         }
 
         try {
-            this.post = await getBlogPostById(id);
+            this.post = await ApiService.getBlogPostById(id);
 
             this._renderPost();
 
@@ -84,9 +84,8 @@ export default class BlogDetailComponent extends BaseHTMLElement {
                 if (newValue === this.post[field]) return;
 
                 try {
-                    await updateBlogPost(this.post.id, { [field]: newValue }, this.token);
+                    await ApiService.updateBlogPost(this.post.id, { [field]: newValue }, this.token);
                     this.post[field] = newValue;
-
                 } catch (err) {
                     console.error('Error al guardar:', err);
                 }
