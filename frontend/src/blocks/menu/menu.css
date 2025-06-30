@@ -15,7 +15,10 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     background: url('../../assets/images/menu_main.png') center/cover no-repeat;
     height: 800px;
+    background-size: cover;
+    background-position: center;
 }
+
 
 .menu__main .menu__overlay-title {
     position: absolute;
@@ -172,9 +175,9 @@
 }
 
 .menu-item__add {
-    width: 28px;
-    height: 28px;
-    background: rgba(240, 234, 214, 0.15);
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.873);
     border: none;
     border-radius: 50%;
     cursor: pointer;

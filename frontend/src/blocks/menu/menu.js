@@ -17,6 +17,8 @@ export default class MenuComponent extends BaseHTMLElement {
         this.$filters = this.shadowRoot.querySelector('.menu__filters');
         this.$list = this.shadowRoot.querySelector('.menu__items');
         this.$main = this.shadowRoot.querySelector('.menu__main');
+        this.$tpl = this.shadowRoot.getElementById('menu-item-template');
+
         this.$title = document.createElement('div');
         this.$price = document.createElement('div');
         this.$btn = document.createElement('button');
@@ -66,25 +68,34 @@ export default class MenuComponent extends BaseHTMLElement {
         this.items
             .filter(i => this.currentCategory === 'all' || String(i.category_id) === this.currentCategory)
             .forEach(item => {
-                const el = document.createElement('div');
-                el.className = 'menu-item';
-                el.innerHTML = `
-                    <div class="menu-item__img-wrapper">
-                        <img src="${item.image_url}" alt="${item.name}" class="menu-item__img"/>
-                    </div>
-                    <div class="menu-item__info">
-                        <h2 class="menu-item__name">${item.name}</h2>
-                        <p class="menu-item__desc">${item.description}</p>
-                    </div>
-                    <div class="menu-item__price">${item.price}</div>
-                `;
+                const clone = this.$tpl.content.cloneNode(true);
+                const el = clone.querySelector('.menu-item');
+                el.dataset.category = item.category_id;
+
+                const img = clone.querySelector('.menu-item__img');
+                img.src = item.image_url;
+                img.alt = item.name;
+
+                clone.querySelector('.menu-item__name').textContent = item.name;
+                clone.querySelector('.menu-item__desc').textContent = item.description;
+
+                const priceEl = clone.querySelector('.menu-item__price');
+                priceEl.textContent = `$${item.price}`;
+
+                const addBtn = clone.querySelector('.menu-item__add');
+                addBtn.addEventListener('click', async e => {
+                    e.stopPropagation();
+                    await ApiService.addCartItem(item.id, 1, this.token);
+                    window.dispatchEvent(new CustomEvent('cart-updated'));
+                });
+
                 el.addEventListener('click', () => this._selectItem(item));
-                this.$list.appendChild(el);
+                this.$list.appendChild(clone);
             });
     }
 
     _clearMain() {
-        this.$main.style.backgroundImage = `url('../../assets/images/menu_main.png')`;
+        this.$main.style.backgroundImage = `')`;
         [this.$title, this.$price, this.$btn].forEach(node => {
             if (node.parentNode === this.$main) this.$main.removeChild(node);
         });
