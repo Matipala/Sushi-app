@@ -11,6 +11,8 @@ const routes = {
 };
 
 export default {
+    _instances: {},
+
     init() {
         window.addEventListener('DOMContentLoaded', () => this.render());
         window.addEventListener('hashchange', () => this.render());
@@ -22,14 +24,39 @@ export default {
     },
 
     render() {
-        const hash = window.location.hash.replace(/^#/, '') || '/';
-        const tag = routes[hash];
+        const raw = window.location.hash.replace(/^#/, '') || '/';
+        const outlet = document.getElementById('app');
+
+        let tag, params;
+        if (raw.startsWith('/blog/') && raw.split('/').length === 3) {
+            tag = 'blog-detail-component';
+            params = { id: raw.split('/')[2] };
+
+            if (this._instances[tag]) {
+                outlet.removeChild(this._instances[tag]);
+                delete this._instances[tag];
+            }
+        } else {
+            tag = routes[raw];
+        }
+
         if (!tag) {
-            console.error(`Ruta desconocida: ${hash}`);
+            console.error(`Ruta desconocida: ${raw}`);
             return;
         }
-        const outlet = document.getElementById('app');
-        outlet.innerHTML = '';
-        outlet.appendChild(document.createElement(tag));
+
+        if (!this._instances[tag]) {
+            const el = document.createElement(tag);
+            if (params) el.params = params;
+            el.style.display = 'none';
+            outlet.appendChild(el);
+            this._instances[tag] = el;
+        } else if (params) {
+            this._instances[tag].params = params;
+        }
+
+        Object.entries(this._instances).forEach(([routeTag, el]) => {
+            el.style.display = (routeTag === tag) ? '' : 'none';
+        });
     }
 };
