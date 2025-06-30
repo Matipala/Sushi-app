@@ -1,29 +1,32 @@
 <link rel="stylesheet" href="blocks/blog/blog.css" />
-
 <div class="blog">
-    <!-- Hero a la izquierda -->
     <div class="blog__hero">
         <h1 class="blog__hero-title">Blog</h1>
     </div>
 
-    <!-- Lista de posts a la derecha -->
     <div class="blog__list">
-        <div class="blog__list-header">Latest Articles</div>
+        <h2 class="blog__list-header">
+            Behind the Scenes<br>&amp; Latest News
+        </h2>
+        <div class="blog__filters"></div>
         <div class="blog__items"></div>
     </div>
 </div>
 
 <template id="post-template">
     <div class="blog__item">
-        <img class="blog__item-image" src="" alt="" />
+        <div class="blog__item-image-wrapper">
+            <img class="blog__item-image" src="" alt="" />
+            <button class="blog__item-fav" title="Favorite">★</button>
+        </div>
         <div class="blog__item-content">
             <div class="blog__item-date"></div>
             <h2 class="blog__item-title"></h2>
             <p class="blog__item-desc"></p>
-            <!-- Autor debajo de la descripción -->
             <div class="blog__item-author-wrapper">
                 <span class="blog__item-author"></span>
             </div>
         </div>
     </div>
 </template>
+<footer-component></footer-component>
