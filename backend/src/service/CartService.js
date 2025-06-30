@@ -1,8 +1,6 @@
-// src/service/CartService.js
 const { supabase } = require('../config/supabase-config');
 
 class CartService {
-    // upsert (inserta o actualiza) un ítem en el carrito
     static async addOrUpdate(user_id, menu_item_id, quantity) {
         const { data, error } = await supabase
             .from('cart_items')
@@ -11,11 +9,9 @@ class CartService {
                 { onConflict: ['user_id', 'menu_item_id'], returning: 'representation' }
             );
         if (error) throw error;
-        // supabase devuelve un array
         return Array.isArray(data) ? data[0] : data;
     }
 
-    // lista todos los ítems del carrito de un usuario
     static async list(user_id) {
         const { data, error } = await supabase
             .from('cart_items')

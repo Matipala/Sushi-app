@@ -181,3 +181,22 @@ export function createOrder(body, token) {
 }
 
 
+export function getFavorites(token) {
+    return request('/favorites', { headers: { Authorization: `Bearer ${token}` } });
+}
+export function addFavorite(postId, token) {
+    return request('/favorites', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ postId })
+    });
+}
+export function removeFavorite(postId, token) {
+    return request(`/favorites/${postId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
+
+
