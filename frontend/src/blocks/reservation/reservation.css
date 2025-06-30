@@ -121,7 +121,7 @@
 .reservation__form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 50px;
 }
 
 .reservation__field {

@@ -1,7 +1,7 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
 import { createReservation } from '../../api.js';
 
-class Reservation extends BaseHTMLElement {
+class ReservationComponent extends BaseHTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -10,59 +10,65 @@ class Reservation extends BaseHTMLElement {
     async connectedCallback() {
         await this.loadHTML('blocks/reservation/reservation.template.html');
 
-        this.form = this.shadowRoot.querySelector('.reservation__form');
-        this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        this.isLoggedIn = !!localStorage.getItem('token');
+
+        this.$without = this.shadowRoot.querySelector('.reservation__without-session');
+        this.$with = this.shadowRoot.querySelector('.reservation__with-session');
+        this.$form = this.shadowRoot.querySelector('.reservation__form');
+
+        if (this.isLoggedIn) {
+            this.$without.style.display = 'none';
+        } else {
+            this.$with.style.display = 'none';
+        }
+
+        this.$form.addEventListener('submit', this.handleSubmit.bind(this));
     }
 
-    async handleSubmit(event) {
-        event.preventDefault();
-
-        const formData = new FormData(this.form);
+    async handleSubmit(e) {
+        e.preventDefault();
+        const fd = new FormData(this.$form);
         const payload = {
-            name: formData.get('name'),
-            contact: formData.get('phone'),
-            email: formData.get('email'),
-            date: formData.get('date'),
-            time: formData.get('time'),
-            partySize: parseInt(formData.get('guests'), 10)
+            guests: parseInt(fd.get('guests'), 10),
+            date: fd.get('date'),
+            time: fd.get('time'),
         };
+
+        if (!this.isLoggedIn) {
+            payload.name = fd.get('name');
+            payload.phone = fd.get('phone');
+            payload.email = fd.get('email');
+        }
 
         try {
             await createReservation(payload);
-            this.showPopup('Reserva creada con éxito');
-            this.form.reset();
+            this.showPopup('Reserva creada con éxito', true);
+            this.$form.reset();
         } catch (err) {
-            console.error('Error creating reservation:', err);
-            this.showPopup('Error al crear la reserva. Intenta de nuevo.', false);
+            console.error(err);
+            this.showPopup(err.message || 'Error al crear la reserva', false);
         }
     }
 
-    showPopup(message, success = true) {
-        const popup = document.createElement('div');
-        popup.textContent = message;
-        Object.assign(popup.style, {
-            position: 'fixed',
-            top: '20px',
-            left: '50%',
+    showPopup(msg, ok = true) {
+        const pop = document.createElement('div');
+        pop.textContent = msg;
+        Object.assign(pop.style, {
+            position: 'fixed', top: '20px', left: '50%',
             transform: 'translateX(-50%)',
-            background: success ? '#4BB543' : '#FF6B6B',
-            color: '#FFF',
-            padding: '10px 20px',
-            borderRadius: '5px',
-            zIndex: '9999',
-            fontFamily: 'sans-serif',
-            fontSize: '14px',
-            opacity: '0',
-            transition: 'opacity 0.3s'
+            background: ok ? '#4BB543' : '#FF6B6B',
+            color: '#FFF', padding: '10px 20px',
+            borderRadius: '5px', zIndex: 9999,
+            opacity: 0, transition: 'opacity .3s'
         });
-        this.shadowRoot.appendChild(popup);
-        requestAnimationFrame(() => popup.style.opacity = '1');
+        this.shadowRoot.appendChild(pop);
+        requestAnimationFrame(() => pop.style.opacity = '1');
         setTimeout(() => {
-            popup.style.opacity = '0';
-            popup.addEventListener('transitionend', () => popup.remove(), { once: true });
+            pop.style.opacity = '0';
+            pop.addEventListener('transitionend', () => pop.remove(), { once: true });
         }, 3000);
     }
 }
 
-customElements.define('reservation-component', Reservation);
-export default Reservation;
+customElements.define('reservation-component', ReservationComponent);
+export default ReservationComponent;
