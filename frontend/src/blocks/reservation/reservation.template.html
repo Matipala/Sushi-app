@@ -16,41 +16,18 @@
             </p>
 
             <form class="reservation__form">
-                <div class="reservation__without-session">
-                    <div class="reservation__field">
-                        <input type="text" name="name" class="reservation__input" placeholder="Name" required />
+
+
+                <div class="reservation__row">
+                    <div class="reservation__field reservation__field--small">
+                        <input type="number" name="guests" class="reservation__input" placeholder="Guests" min="1"
+                            required>
                     </div>
-                    <div class="reservation__field">
-                        <input type="tel" name="phone" class="reservation__input" placeholder="Phone Number" required />
+                    <div class="reservation__field reservation__field--small">
+                        <input type="date" name="date" class="reservation__input" required>
                     </div>
-                    <div class="reservation__field">
-                        <input type="email" name="email" class="reservation__input" placeholder="Email" required />
-                    </div>
-                    <div class="reservation__row">
-                        <div class="reservation__field reservation__field--small">
-                            <input type="number" name="guests" class="reservation__input" placeholder="Guests" min="1"
-                                required />
-                        </div>
-                        <div class="reservation__field reservation__field--small">
-                            <input type="date" name="date" class="reservation__input" required />
-                        </div>
-                        <div class="reservation__field reservation__field--small">
-                            <input type="time" name="time" class="reservation__input" required />
-                        </div>
-                    </div>
-                </div>
-                <div class="reservation__with-session">
-                    <div class="reservation__row">
-                        <div class="reservation__field reservation__field--small">
-                            <input type="number" name="guests" class="reservation__input" placeholder="Guests" min="1"
-                                required />
-                        </div>
-                        <div class="reservation__field reservation__field--small">
-                            <input type="date" name="date" class="reservation__input" required />
-                        </div>
-                        <div class="reservation__field reservation__field--small">
-                            <input type="time" name="time" class="reservation__input" required />
-                        </div>
+                    <div class="reservation__field reservation__field--small">
+                        <input type="time" name="time" class="reservation__input" required>
                     </div>
                 </div>
 

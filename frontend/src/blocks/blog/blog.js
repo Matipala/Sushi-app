@@ -15,7 +15,6 @@ export default class BlogComponent extends BaseHTMLElement {
         this.$tpl = this.shadowRoot.getElementById('post-template');
 
         if (!this.$filters || !this.$items || !this.$tpl) {
-            console.error('Faltan selectores en blog.template.html');
             return;
         }
 

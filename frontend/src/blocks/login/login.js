@@ -1,5 +1,6 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
 import router from '../../services/router.js';
+import ApiService from '../../services/ApiService.js';
 
 class Login extends BaseHTMLElement {
     constructor() {
@@ -32,24 +33,22 @@ class Login extends BaseHTMLElement {
         const password = this.shadowRoot.querySelector('input[name="password"]').value;
 
         try {
-            const res = await fetch('http://localhost:3000/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Login failed');
+            const { token, user } = await ApiService.login({ email, password });
 
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
             window.dispatchEvent(new CustomEvent('auth-changed'));
 
             this.showPopup('Login exitoso', true);
 
-            setTimeout(() => { window.location.hash = '#/'; window.location.reload(); }, 800);
+            setTimeout(() => {
+                router.nav('/');
+                window.location.reload();
+            }, 800);
+
         } catch (err) {
             console.error(err);
-            this.showPopup(err.message, false);
+            this.showPopup(err.message || 'Error al iniciar sesión', false);
             errorEl.textContent = err.message;
         }
     }

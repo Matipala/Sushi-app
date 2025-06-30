@@ -112,12 +112,15 @@ const ApiService = (() => {
             headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
     }
-    async function createReservation(data) {
+    async function createReservation(data, token) {
+        if (!token) throw new Error('Token requerido');
         return request('/reservations', {
             method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
             body: JSON.stringify(data)
         });
     }
+
     async function updateReservation(id, data, token) {
         return request(`/reservations/${id}`, {
             method: 'PUT',
@@ -166,14 +169,37 @@ const ApiService = (() => {
         });
     }
 
+    // Favorites
+    async function getFavorites(token) {
+        return request('/favorites', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+    }
+
+    async function addFavorite(postId, token) {
+        return request('/favorites', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ postId })
+        });
+    }
+
+    async function removeFavorite(postId, token) {
+        return request(`/favorites/${postId}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    }
+
+
     return {
         register, login,
         getCategories, getCategoryById, createCategory, updateCategory, deleteCategory,
-        getMenuItems, getMenuItemById, createMenuItem, updateMenuItem, deleteMenuItem,
+        getMenuItems, getMenuItemById, getFavorites, createMenuItem, updateMenuItem, deleteMenuItem,
         getBlogPosts, getBlogPostById, createBlogPost, updateBlogPost, deleteBlogPost,
         getReservations, getReservationById, createReservation, updateReservation, deleteReservation,
         getCartItems, addCartItem, updateCartItem, removeCartItem,
-        createOrder
+        createOrder, removeFavorite, addFavorite
     };
 })();
 
