@@ -18,6 +18,17 @@
 
 ---
 
+## Patron de Diseño
+- Patron Module en ApiServices
+
+<img width="547" alt="image" src="https://github.com/user-attachments/assets/c596a4e7-fe26-4bff-828e-5e0707ff7ce3" />
+
+- Patron Mutation Observer en CartComponent
+
+<img width="335" alt="image" src="https://github.com/user-attachments/assets/516abb83-5bec-4754-87a9-39af4ef963ba" />
+
+---
+
 ## ¿Qué Hace Este Proyecto?
 
 1. **Backend (Node.js + Supabase)**  
