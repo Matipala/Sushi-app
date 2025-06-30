@@ -6,23 +6,24 @@
 
 .registration {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: 100vh;
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 1rem;
+    padding: 1rem;
     box-sizing: border-box;
 }
 
 .registration__main {
     position: relative;
-    border-radius: 25px;
+    border-radius: 1.5rem;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
     background: url('../../assets/images/login-register.jpg') center/cover no-repeat;
+    height: 200px;
 }
 
 .registration__aside {
-    gap: 20px;
+    gap: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -30,12 +31,13 @@
 
 .registration__item {
     position: relative;
-    border-radius: 25px;
+    border-radius: 1.5rem;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    height: 200px;
 }
 
 .registration__item--menu {
@@ -55,100 +57,112 @@
     bottom: 0;
     right: 0;
     background-color: #0a0b0a;
-    border-top-left-radius: 25px;
+    border-top-left-radius: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     color: #efe7d2;
     text-decoration: none;
-    padding: 10px;
-    font-size: 16px;
+    padding: 0.5rem;
+    font-size: 1rem;
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
 .registration__link-text {
-    padding-left: 20px;
+    padding-left: 1rem;
 }
 
 .registration__link-icon {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 .registration__title {
     position: absolute;
-    bottom: 40px;
-    left: 60px;
+    bottom: 1rem;
+    left: 1rem;
     z-index: 10;
     color: #f0ead6;
+    font-size: 6vw;
+    line-height: 1;
+    letter-spacing: 0.3rem;
+    text-transform: uppercase;
 }
 
 .registration__title-line {
     margin: 0;
     user-select: none;
-    font-size: 90px;
+    font-size: 6vw;
     line-height: 1;
-    letter-spacing: 3px;
+    letter-spacing: 0.3rem;
     text-transform: uppercase;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 768px) {
     .registration {
-        grid-template-columns: 1fr;
-        height: auto;
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
     }
 
     .registration__main {
-        height: 300px;
-    }
-
-    .registration__aside {
-        grid-template-rows: repeat(3, 200px);
-    }
-
-    .registration__link {
-        width: 180px;
-        height: 70px;
-        border-top-left-radius: 35px;
-    }
-
-    .registration__title {
-        left: 20px;
-        bottom: 20px;
+        height: 400px;
     }
 
     .registration__title-line {
-        font-size: 15vw;
+        font-size: 5rem;
+    }
+
+    .registration__link {
+        width: 200px;
+        height: 70px;
+    }
+
+    .registration__title {
+        left: 2rem;
+        bottom: 2rem;
     }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1200px) {
     .registration {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        height: auto;
+        gap: 2rem;
     }
 
-    .registration__side {
-        grid-template-rows: auto auto auto;
+    .registration__main {
+        height: 950px;
+    }
+
+    .registration__title-line {
+        font-size: 6rem;
+    }
+
+    .registration__link {
+        width: 220px;
+        height: 80px;
+    }
+
+    .registration__title {
+        font-size: 5rem;
+        left: 4rem;
+        bottom: 3rem;
     }
 }
-
 
 .register {
-    border-radius: 25px;
-    padding: 90px;
+    border-radius: 1.5rem;
+    padding: 2rem;
     color: #f0ead6;
     border: 1px solid rgba(240, 234, 214, 0.2);
-    height: 100%;
+    height: auto;
+    box-sizing: border-box;
 }
 
 .register__title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.2rem;
     margin-bottom: 1.5rem;
     position: relative;
 }
@@ -164,7 +178,7 @@
 .register__form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -172,8 +186,8 @@
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(240, 234, 214, 0.2);
-    border-radius: 15px;
-    padding: 15px 20px;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
     font-size: 1rem;
     color: #f0ead6;
 }
@@ -191,8 +205,8 @@
     background: #efe7d2;
     color: #0a0b0a;
     border: none;
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 1rem;
+    padding: 1rem;
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 1px;

@@ -1,190 +1,127 @@
-.contact {
+.gallery {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1rem;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
     box-sizing: border-box;
-    background: url('../../assets/images/background.png');
-    height: 100vh;
-
 }
 
-.contact__hero {
+.gallery__item {
     position: relative;
-    border-radius: 25px;
+    width: 100%;
+    height: 200px;
+    border-radius: 1rem;
     overflow: hidden;
-    background: url('../../assets/images/contact_main.png') center/cover no-repeat;
-    height: 95vh;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    background-size: cover;
+    background-position: center;
 }
 
-.contact__hero-overlay {
-    content: '';
+.gallery__item--main {
+    background-image: url('../../assets/images/sushi-banner.png');
+}
+
+.gallery__item--menu {
+    background-image: url('../../assets/images/menu.jpg');
+}
+
+.gallery__item--reservation {
+    background-image: url('../../assets/images/reservation.jpg');
+}
+
+.gallery__item--restaurant {
+    background-image: url('../../assets/images/our-restaurant.jpg');
+}
+
+.gallery__link {
     position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.contact__hero-title {
-    position: absolute;
-    bottom: 40px;
-    left: 60px;
-    font-size: 90px;
-    color: #f0ead6;
-    text-transform: uppercase;
-    z-index: 1;
-}
-
-.contact__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 400px auto;
-    gap: 20px;
-}
-
-.contact__cell.contact__gallery {
-    grid-column: 2;
-    grid-row: 1;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 20px;
-}
-
-.contact__cell {
-    position: relative;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 30px;
-    box-sizing: border-box;
-    color: #f0ead6;
-    height: 410px;
-
-}
-
-.contact__cell.contact__hours {
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(239, 231, 210, 0.2);
-    border-radius: 15px;
-
-}
-
-.contact__cell.contact__details {
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(239, 231, 210, 0.2);
-    border-radius: 15px;
-}
-
-.contact__cell-title {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-.contact__hours-list {
-    list-style: none;
-}
-
-.contact__hours-list li {
+    bottom: 0;
+    right: 0;
+    background-color: #0a0b0a;
+    border-top-left-radius: 1.5rem;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-.contact__gallery {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 50px 50px;
-    gap: 10px;
-    padding: 0;
-}
-
-.contact__gallery img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-.contact__map {
-    padding: 0;
-}
-
-.contact__map img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 15px;
-}
-
-.contact__show-route {
-    display: block;
-    position: absolute;
-    bottom: 20px;
-    right: 30px;
-    background: #0a0b0a;
-    padding: 10px 20px;
-    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #efe7d2;
     text-decoration: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.gallery__link-text {
+    padding-left: 1rem;
+}
+
+.gallery__link-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.gallery__title {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 10;
     color: #f0ead6;
-    font-size: 0.9rem;
+    font-size: 10vw;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 3px;
     text-transform: uppercase;
 }
 
-.contact__details-grid {
-    display: flex;
-    gap: 20px;
-}
-
-.contact__terms {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-.contact__values {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    font-size: 0.9rem;
-    text-align: right;
-}
-
-.contact__socials {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-}
-
-.contact__socials img {
-    width: 24px;
-    height: 24px;
-}
-
-@media (max-width: 767px) {
-    .contact {
-        display: block;
-        height: auto;
+@media (min-width: 768px) {
+    .gallery {
+        grid-template-columns: 3fr 1fr;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 2rem;
     }
 
-    .contact__hero {
+    .gallery__item {
         height: 300px;
     }
 
-    .contact__grid {
-        display: block;
+    .gallery__link {
+        font-size: 1rem;
+        width: 200px;
+        height: 80px;
+        border-top-left-radius: 2rem;
     }
 
-    .contact__cell {
-        margin-top: 20px;
+    .gallery__title {
+        left: 2rem;
+        bottom: 2rem;
+        font-size: 8rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .gallery {
+        gap: 3rem;
+        padding: 3rem;
+    }
+
+    .gallery__item {
+        height: 350px;
+    }
+
+    .gallery__link {
+        font-size: 1.1rem;
+        width: 220px;
+        height: 90px;
+    }
+
+    .gallery__title {
+        font-size: 12vw;
+        left: 4rem;
+        bottom: 4rem;
     }
 }
