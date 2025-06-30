@@ -117,3 +117,6 @@ export default class CartComponent extends BaseHTMLElement {
 }
 
 customElements.define('cart-component', CartComponent);
+
+//El mutation observer nos permite observar a los cambios en el DOM y ejecutar una función cuando se detectan cambios.
+//El componente no necesita recordar llamar al recálculo tras cada mutación; basta con observar el contenedor de items y el observador lo hará por ti.

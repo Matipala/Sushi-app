@@ -2,12 +2,13 @@ const ApiService = (() => {
     const API_BASE = 'http://localhost:3000/api';
 
     async function request(path, options = {}) {
+        const { headers = {}, ...rest } = options;
         const res = await fetch(`${API_BASE}${path}`, {
+            ...rest,
             headers: {
                 'Content-Type': 'application/json',
-                ...(options.headers || {})
-            },
-            ...options
+                ...headers
+            }
         });
         if (!res.ok) {
             const errBody = await res.json().catch(() => ({}));
@@ -164,28 +165,6 @@ const ApiService = (() => {
             body: JSON.stringify({ items })
         });
     }
-    // Favorites
-    async function getFavorites(token) {
-        return request('/favorites', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-    }
-
-    async function addFavorite(postId, token) {
-        return request('/favorites', {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ post_id: postId })
-        });
-    }
-
-    async function removeFavorite(postId, token) {
-        return request(`/favorites/${postId}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` }
-        });
-    }
-
 
     return {
         register, login,
@@ -194,11 +173,12 @@ const ApiService = (() => {
         getBlogPosts, getBlogPostById, createBlogPost, updateBlogPost, deleteBlogPost,
         getReservations, getReservationById, createReservation, updateReservation, deleteReservation,
         getCartItems, addCartItem, updateCartItem, removeCartItem,
-        createOrder, getFavorites, addFavorite, removeFavorite
+        createOrder
     };
 })();
 
 export default ApiService;
+
 
 
 //Utilizamos el patron de diseño Module para ApiService este patron nos ofrece un contenedor autocontenido, coherente y único para toda la lógica de interacción con el backend, mejorando la mantenibilidad, la coherencia y la escalabilidad de la aplicación.
