@@ -22,7 +22,6 @@ export default class CartComponent extends BaseHTMLElement {
 
     async _renderCart() {
         if (!this.token) {
-            this.showPopup('Tienes que iniciar sesión para ver tu carrito', false);
             return;
         }
 
@@ -48,7 +47,6 @@ export default class CartComponent extends BaseHTMLElement {
         <button class="remove">×</button>
       `;
 
-            // handlers
             wrapper.querySelector('.qty-incr').addEventListener('click', async () => {
                 await updateCartItem(item.id, item.quantity + 1, this.token);
                 window.dispatchEvent(new CustomEvent('cart-updated'));
