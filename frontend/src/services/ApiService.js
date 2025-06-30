@@ -190,6 +190,14 @@ const ApiService = (() => {
             headers: { Authorization: `Bearer ${token}` },
         });
     }
+    //infinite scroll
+    async function getMenuItemPaged(page, limit) {
+        return request(`/menu-items?page=${page}&limit=${limit}`);
+    }
+
+    async function getBlogPostPaged(page, limit) {
+        return request(`/blogs?page=${page}&limit=${limit}`);
+    }
 
 
     return {
@@ -199,7 +207,7 @@ const ApiService = (() => {
         getBlogPosts, getBlogPostById, createBlogPost, updateBlogPost, deleteBlogPost,
         getReservations, getReservationById, createReservation, updateReservation, deleteReservation,
         getCartItems, addCartItem, updateCartItem, removeCartItem,
-        createOrder, removeFavorite, addFavorite
+        createOrder, removeFavorite, addFavorite, getMenuItemPaged, getBlogPostPaged
     };
 })();
 

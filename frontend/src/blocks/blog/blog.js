@@ -5,6 +5,10 @@ export default class BlogComponent extends BaseHTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.pages = 1;
+        this.limit = 50;
+        this.loading = false;
+        this.more = true;
     }
 
     async connectedCallback() {
@@ -13,8 +17,11 @@ export default class BlogComponent extends BaseHTMLElement {
         this.$filters = this.shadowRoot.querySelector('.blog__filters');
         this.$items = this.shadowRoot.querySelector('.blog__items');
         this.$tpl = this.shadowRoot.getElementById('post-template');
+        this.sentinel = document.createElement('div');
+        this.sentinel.className = 'scroll-sentinel';
+        this.$list.after(this.sentinel);
 
-        if (!this.$filters || !this.$items || !this.$tpl) {
+        if (!this.$filters || !this.$items || !this.$tpl || !this.sentinel || !this.sentinel.className || this.$list.after) {
             return;
         }
 
@@ -43,12 +50,42 @@ export default class BlogComponent extends BaseHTMLElement {
 
         const posts = await ApiService.getBlogPosts();
         this._renderPosts(posts);
+
+        this.observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting && !this.loading && thismore) {
+                    this.loadNextPage();
+                }
+            },
+            {
+                rootmargin: '200px', threshold: 0
+            }
+        );
+        this.observer.observe(this.sentinel);
+        this.loadNextPage();
     }
 
+    async loadNextPage() {
+        this.loading = true;
+        try {
+            const posts = await ApiService.getBlogPostPaged(this.paged, this.limit);
+            if (items.length < this.limit) this.hasMore = false;
+            this.renderPosts(posts);
+            this.paged++;
+        } catch (err) {
+            console.error('error al cargar el menu:', err);
+        } finally {
+            this.loading = false;
+        }
+    }
     _renderPosts(posts) {
         this.$items.innerHTML = '';
         posts.forEach(p => {
-            const link = document.createElement('a');
+            const link = document.createElement('div');
+            el.className = 'blog__item';
+            el.innerHTML = '<div class="blog__item-image-wrapper"></div><div class="blog__item-info"></div><div class="blog__item-price">$${item.price}</div>';
+            this.$list.appendChild(el)
+
             link.href = `#/blog/${p.id}`;
             link.setAttribute('data-link', '');
             const clone = this.$tpl.content.cloneNode(true);

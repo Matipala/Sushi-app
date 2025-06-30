@@ -9,6 +9,10 @@ export default class MenuComponent extends BaseHTMLElement {
         this.categories = [];
         this.items = [];
         this.currentCategory = 'all';
+        this.pages = 1;
+        this.limit = 50;
+        this.loading = false;
+        this.more = true;
     }
 
     async connectedCallback() {
@@ -27,12 +31,45 @@ export default class MenuComponent extends BaseHTMLElement {
         this.$btn.classList.add('menu__overlay-btn');
         this.$btn.textContent = '+';
 
+        this.sentinel = document.createElement('div');
+        this.sentinel.className = 'scroll-sentinel';
+        this.$list.after(this.sentinel);
+
         this.token = localStorage.getItem('token');
 
         await this._loadData();
         this._bindFilterButtons();
         this._renderItems();
+
+        //Aqui aplicamos el patron OBSERVER
+        this.observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting && !this.loading && this.more) {
+                    this.loadNextPage();
+                }
+            },
+            {
+                rootmargin: '200px', threshold: 0
+            }
+        );
+        this.observer.observe(this.sentinel);
+        this.loadNextPage();
     }
+
+    async loadNextPage() {
+        this.loading = true;
+        try {
+            const items = await ApiService.getMenuItemPaged(this.pages, this.limit);
+            if (items.length < this.limit) this.more = false;
+            this.renderItems(items);
+            this.pages++;
+        } catch (err) {
+            console.error('error al cargar el menu:', err);
+        } finally {
+            this.loading = false;
+        }
+    }
+
 
     async _loadData() {
         this.categories = await ApiService.getCategories();
@@ -65,6 +102,12 @@ export default class MenuComponent extends BaseHTMLElement {
 
     _renderItems() {
         this.$list.innerHTML = '';
+        items.forEach(item => {
+            const link = document.createElement('div');
+            el.className = 'menu__item';
+            el.innerHTML = '<div class="menu__item-image-wrapper"></div><div class="menu__item-info">{{item.name}}</div><div class="menu-item__price-add">$${{item.price}}</div>';
+            this.$list.appendChild(el)
+        });
         this.items
             .filter(i => this.currentCategory === 'all' || String(i.category_id) === this.currentCategory)
             .forEach(item => {
@@ -95,7 +138,7 @@ export default class MenuComponent extends BaseHTMLElement {
     }
 
     _clearMain() {
-        this.$main.style.backgroundImage = `')`;
+        this.$main.style.backgroundImage = `url('../../assets/images/menu_main.png')`;
         [this.$title, this.$price, this.$btn].forEach(node => {
             if (node.parentNode === this.$main) this.$main.removeChild(node);
         });
