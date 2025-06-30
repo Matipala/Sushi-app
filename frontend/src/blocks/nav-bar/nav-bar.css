@@ -93,9 +93,10 @@ a {
     color: #fff;
 }
 
-.navbar__menu-item--button:hover {
-    background-color: rgba(24, 24, 24, 0.8);
-    border-color: rgb(239, 231, 210, 0.3);
+.navbar__menu-item--button {
+    background: rgba(222, 217, 201, 0.038);
+    border: 1px solid rgba(240, 234, 214, 0.2);
+    border-radius: 10px;
 }
 
 .navbar__modal-menu {
@@ -157,4 +158,9 @@ a {
     border-radius: 50%;
     line-height: 1;
     z-index: 10;
+}
+
+.profile-icon,
+.registration-btn {
+    display: none;
 }
