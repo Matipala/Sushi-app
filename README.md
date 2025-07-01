@@ -85,4 +85,7 @@ Figma: [ https://www.figma.com/file/XXXXXXXXXXXX/Qitchen-Designs](https://www.fi
 
 Layouts de escritorio.
 
+### Documento Defensa
+Word: https://docs.google.com/document/d/1K4ZSLFKBY8nRbFLeuYcw6F_MWKvoD3x4sxlNnMNH8O8/edit?usp=sharing
+
 
