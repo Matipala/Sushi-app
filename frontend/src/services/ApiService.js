@@ -195,7 +195,7 @@ const ApiService = (() => {
         return request(`/menu-items?page=${page}&limit=${limit}`);
     }
 
-    async function getBlogsPostPaged(page, limit) {
+    async function getBlogPostsPaged(page, limit) {
         return request(`/blogs?page=${page}&limit=${limit}`);
     }
 
@@ -207,7 +207,7 @@ const ApiService = (() => {
         getBlogPosts, getBlogPostById, createBlogPost, updateBlogPost, deleteBlogPost,
         getReservations, getReservationById, createReservation, updateReservation, deleteReservation,
         getCartItems, addCartItem, updateCartItem, removeCartItem,
-        createOrder, removeFavorite, addFavorite, getMenuItemsPaged, getBlogsPostPaged
+        createOrder, removeFavorite, addFavorite, getMenuItemsPaged, getBlogPostsPaged
     };
 })();
 
