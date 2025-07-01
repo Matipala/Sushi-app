@@ -68,7 +68,7 @@ export default class BlogComponent extends BaseHTMLElement {
     async loadNextPage() {
         this.loading = true;
         try {
-            const posts = await ApiService.getBlogPostPaged(this.paged, this.limit);
+            const posts = await ApiService.getBlogsPostPaged(this.paged, this.limit);
             if (items.length < this.limit) this.hasMore = false;
             this.renderPosts(posts);
             this.paged++;

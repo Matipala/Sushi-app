@@ -1,18 +1,17 @@
 import BaseHTMLElement from '../base/BaseHTMLElement.js';
 import ApiService from '../../services/ApiService.js';
-import router from '../../services/router.js';
 
 export default class MenuComponent extends BaseHTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.categories = [];
-        this.items = [];
-        this.currentCategory = 'all';
-        this.pages = 1;
-        this.limit = 50;
+
+        this.page = 1;
+        this.limit = 10;
         this.loading = false;
-        this.more = true;
+        this.hasMore = true;
+        this.categories = [];
+        this.currentCategory = 'all';
     }
 
     async connectedCallback() {
@@ -20,142 +19,103 @@ export default class MenuComponent extends BaseHTMLElement {
 
         this.$filters = this.shadowRoot.querySelector('.menu__filters');
         this.$list = this.shadowRoot.querySelector('.menu__items');
-        this.$main = this.shadowRoot.querySelector('.menu__main');
-        this.$tpl = this.shadowRoot.getElementById('menu-item-template');
 
-        this.$title = document.createElement('div');
-        this.$price = document.createElement('div');
-        this.$btn = document.createElement('button');
-        this.$title.classList.add('menu__overlay-title');
-        this.$price.classList.add('menu__overlay-price');
-        this.$btn.classList.add('menu__overlay-btn');
-        this.$btn.textContent = '+';
+        if (!this.$filters || !this.$list) {
+            console.error('Faltan selectores en menu.template.html');
+            return;
+        }
+
+        try {
+            this.categories = await ApiService.getCategories();
+        } catch (err) {
+            console.error('Error al cargar categorías:', err);
+        }
+        this._renderFilters();
 
         this.sentinel = document.createElement('div');
         this.sentinel.className = 'scroll-sentinel';
-        this.$list.after(this.sentinel);
+        this.$list.parentNode.insertBefore(this.sentinel, this.$list.nextSibling);
 
-        this.token = localStorage.getItem('token');
-
-        await this._loadData();
-        this._bindFilterButtons();
-        this._renderItems();
-
-        //Aqui aplicamos el patron OBSERVER
         this.observer = new IntersectionObserver(
             entries => {
-                if (entries[0].isIntersecting && !this.loading && this.more) {
+                if (entries[0].isIntersecting && !this.loading && this.hasMore) {
                     this.loadNextPage();
                 }
             },
-            {
-                rootmargin: '200px', threshold: 0
-            }
+            { rootMargin: '200px', threshold: 0 }
         );
         this.observer.observe(this.sentinel);
-        this.loadNextPage();
-    }
 
-    async loadNextPage() {
-        this.loading = true;
-        try {
-            const items = await ApiService.getMenuItemPaged(this.pages, this.limit);
-            if (items.length < this.limit) this.more = false;
-            this.renderItems(items);
-            this.pages++;
-        } catch (err) {
-            console.error('error al cargar el menu:', err);
-        } finally {
-            this.loading = false;
-        }
-    }
-
-
-    async _loadData() {
-        this.categories = await ApiService.getCategories();
-        this.items = await ApiService.getMenuItems();
-        this._renderFilters();
-    }
-
-    _renderFilters() {
-        this.$filters.innerHTML = `
-            <button data-category="all" class="filter-button filter-button--active">All</button>
-            ${this.categories.map(c =>
-            `<button data-category="${c.id}" class="filter-button">${c.name}</button>`
-        ).join('')}
-        `;
-    }
-
-    _bindFilterButtons() {
         this.$filters.addEventListener('click', e => {
-            const btn = e.target.closest('.filter-button');
+            const btn = e.target.closest('button[data-category]');
             if (!btn) return;
             this.$filters
                 .querySelector('.filter-button--active')
                 .classList.remove('filter-button--active');
             btn.classList.add('filter-button--active');
             this.currentCategory = btn.dataset.category;
-            this._renderItems();
-            this._clearMain();
+            this.page = 1;
+            this.hasMore = true;
+            this.loadNextPage();
         });
+
+        this.loadNextPage();
     }
 
-    _renderItems() {
-        this.$list.innerHTML = '';
+    _renderFilters() {
+        this.$filters.innerHTML = `
+      <button data-category="all" class="filter-button filter-button--active">All</button>
+      ${this.categories.map(c =>
+            `<button data-category="${c.id}" class="filter-button">${c.name}</button>`
+        ).join('')}
+    `;
+    }
+
+    async loadNextPage() {
+        this.loading = true;
+
+        const categoryParam = this.currentCategory === 'all'
+            ? ''
+            : `&category=${this.currentCategory}`;
+
+        try {
+            const items = await ApiService.getMenuItemsPaged(
+                this.page,
+                this.limit
+            );
+
+            if (items.length < this.limit) this.hasMore = false;
+            this._renderItems(items, this.page > 1);
+            this.page++;
+        } catch (err) {
+            console.error('Error al cargar el menú:', err);
+        } finally {
+            this.loading = false;
+        }
+    }
+
+    _renderItems(items, append) {
+        if (!append) this.$list.innerHTML = '';
         items.forEach(item => {
-            const link = document.createElement('div');
-            el.className = 'menu__item';
-            el.innerHTML = '<div class="menu__item-image-wrapper"></div><div class="menu__item-info">{{item.name}}</div><div class="menu-item__price-add">$${{item.price}}</div>';
-            this.$list.appendChild(el)
-        });
-        this.items
-            .filter(i => this.currentCategory === 'all' || String(i.category_id) === this.currentCategory)
-            .forEach(item => {
-                const clone = this.$tpl.content.cloneNode(true);
-                const el = clone.querySelector('.menu-item');
-                el.dataset.category = item.category_id;
+            const tpl = this.shadowRoot.getElementById('menu-item-template');
+            const clone = tpl.content.cloneNode(true);
 
-                const img = clone.querySelector('.menu-item__img');
-                img.src = item.image_url;
-                img.alt = item.name;
+            clone.querySelector('.menu-item__img').src = item.image_url;
+            clone.querySelector('.menu-item__img').alt = item.name;
+            clone.querySelector('.menu-item__name').textContent = item.name;
+            clone.querySelector('.menu-item__desc').textContent = item.description;
+            clone.querySelector('.menu-item__price').textContent = `$${item.price}`;
 
-                clone.querySelector('.menu-item__name').textContent = item.name;
-                clone.querySelector('.menu-item__desc').textContent = item.description;
-
-                const priceEl = clone.querySelector('.menu-item__price');
-                priceEl.textContent = `$${item.price}`;
-
-                const addBtn = clone.querySelector('.menu-item__add');
-                addBtn.addEventListener('click', async e => {
-                    e.stopPropagation();
-                    await ApiService.addCartItem(item.id, 1, this.token);
-                    window.dispatchEvent(new CustomEvent('cart-updated'));
-                });
-
-                el.addEventListener('click', () => this._selectItem(item));
-                this.$list.appendChild(clone);
+            clone.querySelector('.menu-item__add').addEventListener('click', e => {
+                e.stopPropagation();
+                const token = localStorage.getItem('token');
+                ApiService.addCartItem(item.id, 1, token)
+                    .then(() => window.dispatchEvent(new CustomEvent('cart-updated')))
+                    .catch(console.error);
             });
-    }
 
-    _clearMain() {
-        this.$main.style.backgroundImage = `url('../../assets/images/menu_main.png')`;
-        [this.$title, this.$price, this.$btn].forEach(node => {
-            if (node.parentNode === this.$main) this.$main.removeChild(node);
+            this.$list.appendChild(clone);
         });
-    }
-
-    _selectItem(item) {
-        this.$main.style.backgroundImage = `url('${item.image_url}')`;
-        this.$title.textContent = item.name;
-        this.$price.textContent = `$${item.price}`;
-        this.$btn.onclick = async () => {
-            await ApiService.addCartItem(item.id, 1, this.token);
-            window.dispatchEvent(new CustomEvent('cart-updated'));
-        };
-
-        if (!this.$main.contains(this.$title)) this.$main.appendChild(this.$title);
-        if (!this.$main.contains(this.$price)) this.$main.appendChild(this.$price);
-        if (!this.$main.contains(this.$btn)) this.$main.appendChild(this.$btn);
     }
 }
 
